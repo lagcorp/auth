@@ -4,6 +4,6 @@
 
     public interface IAuthenticationProvider
     {
-        Task Login();
+        Task<ILoginResult> Login();
     }
 }

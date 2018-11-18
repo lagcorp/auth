@@ -108,7 +108,7 @@
         ///     Handles redirect after browser call
         /// </summary>
         /// <param name="authorizationResponse"></param>
-        public async Task<string> HandleIncomingRedirectUri(Uri authorizationResponse)
+        public async Task<GoogleLoginResult> HandleIncomingRedirectUri(Uri authorizationResponse)
         {
             var queryString = authorizationResponse.Query;
             Output("MainPage received authorizationResponse: " + authorizationResponse);
@@ -123,14 +123,14 @@
             if (queryStringParams.ContainsKey("error"))
             {
                 Output(string.Format("OAuth authorization error: {0}.", queryStringParams["error"]));
-                return await Task.FromResult("");
+                return new GoogleLoginResult(false);
             }
 
             if (!queryStringParams.ContainsKey("code")
                 || !queryStringParams.ContainsKey("state"))
             {
                 Output("Malformed authorization response. " + queryString);
-                return await Task.FromResult("");
+                return new GoogleLoginResult(false);
             }
 
             // Gets the Authorization code & state
@@ -146,7 +146,7 @@
             if (incoming_state != expected_state)
             {
                 Output(string.Format("Received request with invalid state ({0})", incoming_state));
-                return await Task.FromResult("");
+                return new GoogleLoginResult(false);
             }
 
             // Resets expected state value to avoid a replay attack.
@@ -156,12 +156,12 @@
             Output(Environment.NewLine + "Authorization code: " + code);
 
             var code_verifier = (string) localSettings.Values["code_verifier"];
-            await PerformCodeExchangeAsync(code, code_verifier);
+            return await PerformCodeExchangeAsync(code, code_verifier);
 
-            return await Task.FromResult("ok");
+            
         }
 
-        private async Task PerformCodeExchangeAsync(string code, string code_verifier)
+        private async Task<GoogleLoginResult> PerformCodeExchangeAsync(string code, string code_verifier)
         {
             // Builds the Token request
             var tokenRequestBody = string.Format(
@@ -186,7 +186,7 @@
             if (!response.IsSuccessStatusCode)
             {
                 Output("Authorization code exchange failed.");
-                return;
+                return new GoogleLoginResult(false);
             }
 
             // Sets the Authentication header of our HTTP client using the acquired access token.
@@ -198,7 +198,13 @@
             Output("Making API Call to Userinfo...");
             var userinfoResponse = client.GetAsync(UserInfoEndpoint).Result;
             var userinfoResponseContent = await userinfoResponse.Content.ReadAsStringAsync();
+
             Output(userinfoResponseContent);
+
+            return new GoogleLoginResult(true)
+            {
+                Bearer = accessToken
+            };
         }
     }
 }

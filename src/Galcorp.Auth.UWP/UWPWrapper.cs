@@ -25,23 +25,26 @@
 
         private void AppEventWrapper_ApplicationActivationEvent(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
         {
-            var activation = args as ProtocolActivatedEventArgs;
-            if (activation != null)
+            if (args is ProtocolActivatedEventArgs activation)
             {
                 var c = _wgc.HandleIncomingRedirectUri(activation.Uri);
                 c.ContinueWith(e =>
                 {
+                    this.AsynchorunsuLoginResult = e.Result;
                     waitForBrowserCallbackEvent.Set();
                 });
             }
         }
 
-        public async Task Login()
+        public GoogleLoginResult AsynchorunsuLoginResult { get; set; }
+
+        public async Task<ILoginResult> Login()
         {
             _wgc = new WindowsGoogleClient(_clientId, _redirectUri);
             await _wgc.LoginOpenBrowser();
             waitForBrowserCallbackEvent.WaitOne();
-            //// user is loged in
+
+            return AsynchorunsuLoginResult;
         }
     }
 }
