@@ -9,6 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <Button Content="Button" HorizontalAlignment="Left" Margin="71,64,0,0" VerticalAlignment="Top" Width="192"/>
+        <Border BorderBrush="Black" HorizontalAlignment="Left" Height="100" Margin="31,225,0,0" VerticalAlignment="Top" Width="100"/>
+        <AppBarButton HorizontalAlignment="Left" Icon="Accept" Label="AppBarButton" Margin="249,420,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Page>
