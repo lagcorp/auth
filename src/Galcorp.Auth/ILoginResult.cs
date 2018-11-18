@@ -8,6 +8,7 @@ namespace Galcorp.Auth
     {
         bool Success { get; }
 
-        string Bearer { get; }
+        string AccessToken { get;  }
+        string IdToken { get;  }
     }
 }

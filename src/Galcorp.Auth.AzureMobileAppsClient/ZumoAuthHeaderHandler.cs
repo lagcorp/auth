@@ -23,9 +23,10 @@ namespace Galcorp.Auth.AzureMobileAppsClient
             }
 
             request.Headers.Add("X-ZUMO-AUTH", _token);
-            request.Headers.Add("ZUMO-API-VERSION", "2.0.0");
+            //request.Headers.Add("ZUMO-API-VERSION", "2.0.0");
 
             return base.SendAsync(request, cancellationToken);
         }
+
     }
 }

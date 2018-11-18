@@ -157,8 +157,6 @@
 
             var code_verifier = (string) localSettings.Values["code_verifier"];
             return await PerformCodeExchangeAsync(code, code_verifier);
-
-            
         }
 
         private async Task<GoogleLoginResult> PerformCodeExchangeAsync(string code, string code_verifier)
@@ -192,6 +190,7 @@
             // Sets the Authentication header of our HTTP client using the acquired access token.
             var tokens = JsonObject.Parse(responseString);
             var accessToken = tokens.GetNamedString("access_token");
+            var idToken = tokens.GetNamedString("id_token");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             // Makes a call to the Userinfo endpoint, and prints the results.
@@ -203,7 +202,8 @@
 
             return new GoogleLoginResult(true)
             {
-                Bearer = accessToken
+                IdToken = idToken,
+                AccessToken = accessToken
             };
         }
     }
