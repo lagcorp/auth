@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Paweł Gałęzowski</Authors>
+    <Company>Galcorp</Company>
+    <Version>0.0.9-alpha</Version>
   </PropertyGroup>
 
 </Project>
