@@ -121,12 +121,6 @@
       <Version>6.1.9</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Galcorp.Auth\Galcorp.Auth.csproj">
-      <Project>{6B8BAA07-36D6-4DD9-965E-F88EF7B3D92A}</Project>
-      <Name>Galcorp.Auth</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
