@@ -1,1 +1,0 @@
-C:\Work\bin\nuget.exe pack .\Galcorp.Auth.csproj -properties Configuration=Release
