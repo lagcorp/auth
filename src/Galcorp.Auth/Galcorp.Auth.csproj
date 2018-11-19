@@ -8,4 +8,8 @@
     <Version>0.0.9-alpha</Version>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>C:\Work\Repos\galcorp-auth\build\</OutputPath>
+  </PropertyGroup>
+
 </Project>
