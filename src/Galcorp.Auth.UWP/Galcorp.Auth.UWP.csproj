@@ -118,15 +118,12 @@
     <None Include="Galcorp.Auth.UWP.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Galcorp.Auth">
+      <Version>0.0.9-alpha</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Galcorp.Auth\Galcorp.Auth.csproj">
-      <Project>{53fd95a5-78f7-4d64-b9c3-81fd6283f623}</Project>
-      <Name>Galcorp.Auth</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
