@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Galcorp.Auth.UWP</id>
+    <id>Galcorp.Auth</id>
     <version>0.9-alpha</version>
-    <title>Galcorp.Auth.UWP</title>
+    <title>Galcorp.Auth</title>
     <authors>Paweł Gałęzowski</authors>
     <owners>Paweł Gałęzowski</owners>
     <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
     <projectUrl>http://galcorp.info/</projectUrl>
     <iconUrl>http://github.com/contoso/UsefulStuff/nuget_icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Add google authentication to UWP application. Based on google example.</description>
-    <releaseNotes>Added logging with google</releaseNotes>
+    <description>Core packge for using with authentication from Galcorp.* packages.</description>
+    <releaseNotes>Inital version</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>Google UWP</tags>
   </metadata>
