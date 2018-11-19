@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Galcorp.Auth.UWP</id>
-    <version>0.1.0-alpha</version>
+    <version>0.1.1-alpha</version>
     <title>Galcorp.Auth.UWP</title>
     <authors>Paweł Gałęzowski</authors>
     <owners>Paweł Gałęzowski</owners>
@@ -15,7 +15,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>Google UWP</tags>
     <dependencies>
-      <dependency id="Galcorp.Auth" version="0.1.0-alpha" />
+      <dependency id="Galcorp.Auth" version="0.1.1-alpha" />
     </dependencies>
   </metadata>
   <files>
