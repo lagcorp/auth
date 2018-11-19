@@ -6,6 +6,8 @@
     <Authors>Paweł Gałęzowski</Authors>
     <Company>Galcorp</Company>
     <Version>0.0.9-alpha</Version>
+    <PackageProjectUrl>https://github.com/llaagg/galcorp-auth/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/llaagg/galcorp-auth/</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
