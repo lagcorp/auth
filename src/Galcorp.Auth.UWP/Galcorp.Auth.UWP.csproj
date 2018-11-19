@@ -113,6 +113,7 @@
     <Compile Include="WindowsGoogleClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Galcorp.Auth.UWP.rd.xml" />
+    <None Include="Galcorp.Auth.UWP.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
