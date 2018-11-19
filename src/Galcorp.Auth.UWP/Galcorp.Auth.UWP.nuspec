@@ -15,10 +15,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>Google UWP</tags>
   </metadata>
-  <dependencies>
-    <group targetFramework="UAP10.0">
-      <dependency id="NETStandard.Library" version="2.0.1" />
-      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.0.1" />
-    </group>
-  </dependencies>
+  <files>
+    <file src="Readme.md" target="" />
+  </files>
 </package>

@@ -1,0 +1,1 @@
+C:\Work\bin\nuget.exe pack .\Galcorp.Auth.UWP.csproj -IncludeReferencedProjects -properties Configuration=Release

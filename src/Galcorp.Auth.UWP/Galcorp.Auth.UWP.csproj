@@ -106,7 +106,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Docs.md" />
+    <None Include="buildnuget.bat" />
+    <None Include="Readme.md" />
     <Compile Include="AppEventWrapper.cs" />
     <Compile Include="GoogleLoginResult.cs" />
     <Compile Include="UWPWrapper.cs" />
