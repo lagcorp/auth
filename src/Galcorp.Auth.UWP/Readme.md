@@ -25,17 +25,19 @@ Add Galcorp.Auth.UWP to your Universal Windows project
 
 Add this line to your App.xaml.cs code
 
-`protected override void OnActivated(IActivatedEventArgs args)
+```protected override void OnActivated(IActivatedEventArgs args)
 {
     Galcorp.Auth.UWP.AppEventWrapper.OnApplicationActivationEvent(args);
-}`
+}
+```
 
 To perform login u can use this code (it will give you token)
-`new Thread(new ThreadStart(delegate
+```new Thread(new ThreadStart(delegate
 {
     var a = new UWPWrapper(clientID, redirectURI);
     var c = a.Login().Result;
-})).Start();`
+})).Start();
+```
 
 This thread is needed if you will attach this action to the GUI Button. Thread is need to wait asynchorunsly for a browser call back to be handled
 
