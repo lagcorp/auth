@@ -21,9 +21,9 @@ Your UWP should support Fall Creators Update (to be set in project preferneces)
 
 How to use it
 -------------
-Add Galcorp.Auth.UWP to your Universal Windows project
+Add Galcorp.Auth.UWP nuget to your Universal Windows project
 
-Add this line to your App.xaml.cs code
+Add this line to your **App.xaml.cs code
 
 ```
 protected override void OnActivated(IActivatedEventArgs args)
@@ -69,5 +69,3 @@ containing a period in the UI).
 6. Find the "Protocol" scheme, and replace it with the bundle id you registered
 in step 3. (e.g. "com.example")
 
-
---------------------------
