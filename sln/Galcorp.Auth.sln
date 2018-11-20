@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Galcorp.Auth.AzureMobileApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galcorp.Demo.UWP", "..\src\Galcorp.Demo.UWP\Galcorp.Demo.UWP.csproj", "{DFCACB0D-96D1-4B5D-A186-76EB42F69ABA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galcorp.Auth.Google", "..\src\Galcorp.Auth.Google\Galcorp.Auth.Google.csproj", "{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,22 @@ Global
 		{DFCACB0D-96D1-4B5D-A186-76EB42F69ABA}.Release|x86.ActiveCfg = Release|x86
 		{DFCACB0D-96D1-4B5D-A186-76EB42F69ABA}.Release|x86.Build.0 = Release|x86
 		{DFCACB0D-96D1-4B5D-A186-76EB42F69ABA}.Release|x86.Deploy.0 = Release|x86
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|x64.Build.0 = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Debug|x86.Build.0 = Debug|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|ARM.Build.0 = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|x64.ActiveCfg = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|x64.Build.0 = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|x86.ActiveCfg = Release|Any CPU
+		{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
