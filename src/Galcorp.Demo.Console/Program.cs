@@ -6,6 +6,8 @@ using Galcorp.Auth.Google;
 
 namespace Galcorp.Demo.Console
 {
+    using Auth.NetStandard;
+
     class Program
     {
         // client configuration
@@ -14,7 +16,7 @@ namespace Galcorp.Demo.Console
 
         static void Main(string[] args)
         {
-            var c = new GoogleClient();
+            var c = new GoogleClient(new Platform());
             var t = c.PerformAuthViaBrowser(clientID, clientSecret).Result;
         }
     }

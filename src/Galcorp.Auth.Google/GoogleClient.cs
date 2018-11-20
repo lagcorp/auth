@@ -17,6 +17,13 @@
 
     public class GoogleClient
     {
+        private readonly IPlatform _platform;
+
+        public GoogleClient(IPlatform platform)
+        {
+            _platform = platform;
+        }
+
         const string authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 
         public async Task<ILoginResult> PerformAuthViaBrowser(string clientId,
@@ -31,7 +38,7 @@
             const string code_challenge_method = "S256";
 
             // Creates a redirect URI using an available port on the loopback address.
-            Output("redirect URI: " + redirectUri);
+            _platform.Output("redirect URI: " + redirectUri);
 
             // Creates the OAuth 2.0 authorization request.
             var authorizationRequest = string.Format(
@@ -43,16 +50,7 @@
                 code_challenge,
                 code_challenge_method);
 
-            var http = CreateHttpListner(redirectUri);
-
-            OpenBrowser(authorizationRequest);
-
-
-            var context = http.GetContext();
-            var code = ExtractCode(context, state);
-
-            // Sends an HTTP response to the browser.
-            WriteResponse(context, http);
+            var code = _platform.GetCode(redirectUri, authorizationRequest, state);
 
             if (string.IsNullOrWhiteSpace(code))
                 return await PerformCodeExchange(code, code_verifier, redirectUri, clientId, clientSecret);
@@ -60,91 +58,11 @@
             return new GoogleLoginResult(false);
         }
 
-        public static void OpenBrowser(string url)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                url = url.Replace("&", "^&");
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}"));
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Process.Start("xdg-open", url);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Process.Start("open", url);
-            }
-            else
-            {
-                throw new NotSupportedException("Unable to open browser on this platform.");
-            }
-        }
-
-        private HttpListener CreateHttpListner(string redirectUri)
-        {
-            var http = new HttpListener();
-            http.Prefixes.Add(redirectUri);
-            Output("Listening..");
-            http.Start();
-            return http;
-        }
-
-        private string ExtractCode(HttpListenerContext context, string state)
-        {
-            string code = null;
-
-            // Checks for errors.
-            if (context.Request.QueryString.Get("error") != null)
-            {
-                Output(string.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
-                return null;
-            }
-
-            if (context.Request.QueryString.Get("code") == null
-                || context.Request.QueryString.Get("state") == null)
-            {
-                Output("Malformed authorization response. " + context.Request.QueryString);
-                return null;
-            }
-
-            // extracts the code
-            code = context.Request.QueryString.Get("code");
-            var incoming_state = context.Request.QueryString.Get("state");
-
-            // Compares the receieved state to the expected value, to ensure that
-            // this app made the request which resulted in authorization.
-            if (incoming_state != state)
-            {
-                Output(string.Format("Received request with invalid state ({0})", incoming_state));
-                return null;
-            }
-
-            Output("Authorization code: " + code);
-            return code;
-        }
-
-        private static void WriteResponse(HttpListenerContext context, HttpListener http)
-        {
-            var response = context.Response;
-            var responseString =
-                "<html><head><meta http-equiv=\'refresh\' content=\'10;url=https://google.com\'></head><body>Please return to the app.</body></html>";
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            var responseOutput = response.OutputStream;
-            var responseTask = responseOutput.WriteAsync(buffer, 0, buffer.Length).ContinueWith(task =>
-            {
-                responseOutput.Close();
-                http.Stop();
-                Console.WriteLine("HTTP server stopped.");
-            });
-        }
-
         private async Task<ILoginResult> PerformCodeExchange(string code, string codeVerifier, string redirectUri,
             string clientId,
             string clientSecret)
         {
-            Output("Exchanging code for tokens...");
+            _platform.Output("Exchanging code for tokens...");
 
             // builds the  request
             var tokenRequestURI = "https://www.googleapis.com/oauth2/v4/token";
@@ -199,12 +117,12 @@
                     var response = ex.Response as HttpWebResponse;
                     if (response != null)
                     {
-                        Output("HTTP: " + response.StatusCode);
+                        _platform.Output("HTTP: " + response.StatusCode);
                         using (var reader = new StreamReader(response.GetResponseStream()))
                         {
                             // reads response body
                             var responseText = await reader.ReadToEndAsync();
-                            Output(responseText);
+                            _platform.Output(responseText);
                         }
                     }
                 }
@@ -215,7 +133,7 @@
 
         private async void UserinfoCall(string accessToken)
         {
-            Output("Making API Call to Userinfo...");
+            _platform.Output("Making API Call to Userinfo...");
 
             // builds the  request
             var userinfoRequestURI = "https://www.googleapis.com/oauth2/v3/userinfo";
@@ -233,19 +151,10 @@
             {
                 // reads response body
                 var userinfoResponseText = await userinfoResponseReader.ReadToEndAsync();
-                Output(userinfoResponseText);
+                _platform.Output(userinfoResponseText);
             }
         }
-
-        /// <summary>
-        ///     Appends the given string to the on-screen log, and the debug console.
-        /// </summary>
-        /// <param name="output">string to be appended</param>
-        public void Output(string output)
-        {
-            Console.WriteLine(output);
-        }
-
+        
         /// <summary>
         ///     Returns URI-safe data with a given input length.
         /// </summary>
