@@ -46,6 +46,7 @@ This thread is needed if you will attach this action to the GUI Button. Thread i
 You need also to register protocol in your application and in google your protocol name could be somthing like this: 
 `pw.oauth2`
 
+Use nuget **Galcorp.Auth** for some interfaces that will allow to move login logic to your net standard libraries.
 
 Using your own credentials (docs from google)
 ---------------------------------------------
