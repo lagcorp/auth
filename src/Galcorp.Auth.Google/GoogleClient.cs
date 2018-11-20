@@ -63,7 +63,7 @@
 
             var code = _platform.GetCode(redirectUri, authorizationRequest, state);
 
-            if (string.IsNullOrWhiteSpace(code))
+            if (!string.IsNullOrWhiteSpace(code))
                 return await PerformCodeExchange(code, code_verifier, redirectUri, clientId, clientSecret);
 
             return new GoogleLoginResult(false);
