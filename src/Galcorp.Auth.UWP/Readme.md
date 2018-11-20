@@ -1,4 +1,5 @@
 ﻿Only works in fall creators update
+Microsoft.NETCore.UniversalWindowsPlatform minmum 6.1.9
 
 based on https://github.com/googlesamples/oauth-apps-for-windows
 
