@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="182dca36-1b62-495b-b873-5707548fd633"
-    Publisher="CN=pgale"
+    Name="6c1190f5-1511-4b9d-b911-20d784d111f0"
+    Publisher="CN=PAGA"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="182dca36-1b62-495b-b873-5707548fd633" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="6c1190f5-1511-4b9d-b911-20d784d111f0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Galcorp.Demo.UWP</DisplayName>
-    <PublisherDisplayName>pgale</PublisherDisplayName>
+    <PublisherDisplayName>PAGA</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
