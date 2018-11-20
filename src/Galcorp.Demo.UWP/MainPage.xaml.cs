@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Galcorp.Auth;
+using Galcorp.Auth.UWP;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -25,6 +27,12 @@ namespace Galcorp.Demo.UWP
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void GoogleLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            Client c = new Client(new UWPWrapper());
+            
         }
     }
 }
