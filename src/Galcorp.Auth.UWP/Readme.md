@@ -3,13 +3,45 @@ Microsoft.NETCore.UniversalWindowsPlatform minmum 6.1.9
 
 based on https://github.com/googlesamples/oauth-apps-for-windows
 
+About the library
+-----------------
+Whole implementation is based on google example. It just wrapps it into simple code.
+
 Google Documentation
 --------------------
-
 The protocols referenced in this sample are documented here:
 
 - [OAuth 2.0](https://developers.google.com/identity/protocols/OAuth2)
 - [Using OAuth 2.0 for Mobile and Desktop Applications](https://developers.google.com/identity/protocols/OAuth2InstalledApp)
+
+Requirements
+------------
+This UWP library only works on windows with Microsoft.NETCore.UniversalWindowsPlatform (minimal verio 6.1.9)
+Your UWP should support Fall Creators Update (to be set in project preferneces)
+
+How to use it
+-------------
+Add Galcorp.Auth.UWP to your Universal Windows project
+
+Add this line to your App.xaml.cs code
+
+protected override void OnActivated(IActivatedEventArgs args)
+{
+    Galcorp.Auth.UWP.AppEventWrapper.OnApplicationActivationEvent(args);
+}
+
+To perform login u can use this code (it will give you token)
+new Thread(new ThreadStart(delegate
+{
+    var a = new UWPWrapper(clientID, redirectURI);
+    var c = a.Login().Result;
+})).Start();
+
+This thread is needed if you will attach this action to the GUI Button. Thread is need to wait asynchorunsly for a browser call back to be handled
+
+You need also to register protocol in your application and in google your protocol name could be somthing like this: 
+	pw.oauth2
+
 
 Using your own credentials
 --------------------------
@@ -35,7 +67,3 @@ in step 3. (e.g. "com.example")
 
 
 --------------------------
-protected override void OnActivated(IActivatedEventArgs args)
-{
-    Galcorp.Auth.UWP.AppEventWrapper.OnApplicationActivationEvent(args);
-}
