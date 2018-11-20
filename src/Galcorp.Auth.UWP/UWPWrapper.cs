@@ -22,7 +22,9 @@
 
         public GoogleLoginResult AsynchorunsuLoginResult { get; set; }
 
-        public async Task<ILoginResult> Login()
+        public string Name => "Google";
+
+        public async Task<ILoginResult> GetToken()
         {
             _wgc = new WindowsGoogleClient(_clientId, _redirectUri);
             await _wgc.LoginOpenBrowser();

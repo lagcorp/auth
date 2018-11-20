@@ -4,6 +4,7 @@
 
     public interface IAuthenticationProvider
     {
-        Task<ILoginResult> Login();
+        string Name { get; }
+        Task<ILoginResult> GetToken();
     }
 }

@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
-    using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
@@ -15,18 +13,28 @@
 
     public delegate void WaitForResult();
 
-    public class GoogleClient
+    public class GoogleClient : IAuthenticationProvider
     {
+        private const string AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+        private readonly string _clientId;
         private readonly IPlatform _platform;
+        private readonly string _secret;
 
-        public GoogleClient(IPlatform platform)
+        public GoogleClient(IPlatform platform, string clientId, string secret)
         {
             _platform = platform;
+            _clientId = clientId;
+            _secret = secret;
         }
 
-        const string authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+        public string Name => "Google";
 
-        public async Task<ILoginResult> PerformAuthViaBrowser(string clientId,
+        public Task<ILoginResult> GetToken()
+        {
+            return PerformAuthViaBrowser(_clientId, _secret);
+        }
+
+        private async Task<ILoginResult> PerformAuthViaBrowser(string clientId,
             string clientSecret)
         {
             var redirectUri = string.Format("http://{0}:{1}/", IPAddress.Loopback, GetRandomUnusedPort());
@@ -43,7 +51,7 @@
             // Creates the OAuth 2.0 authorization request.
             var authorizationRequest = string.Format(
                 "{0}?response_type=code&scope=openid%20profile&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
-                authorizationEndpoint,
+                AuthorizationEndpoint,
                 Uri.EscapeDataString(redirectUri),
                 clientId,
                 state,
@@ -154,7 +162,7 @@
                 _platform.Output(userinfoResponseText);
             }
         }
-        
+
         /// <summary>
         ///     Returns URI-safe data with a given input length.
         /// </summary>
@@ -197,7 +205,7 @@
 
             return base64;
         }
-        
+
         public static int GetRandomUnusedPort()
         {
             var listener = new TcpListener(IPAddress.Loopback, 0);

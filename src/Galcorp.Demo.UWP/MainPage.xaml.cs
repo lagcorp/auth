@@ -27,7 +27,7 @@ namespace Galcorp.Demo.UWP
             new Thread(new ThreadStart(delegate
             {
                 var a = new UWPWrapper(clientID, redirectURI);
-                var c = a.Login().Result;
+                var c = a.GetToken().Result;
             })).Start();
         }
     }

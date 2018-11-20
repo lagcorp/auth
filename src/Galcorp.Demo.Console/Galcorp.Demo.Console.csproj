@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Galcorp.Auth.Google\Galcorp.Auth.Google.csproj" />
-    <ProjectReference Include="..\Galcorp.Auth.NetStandard\Galcorp.Auth.NetStandard.csproj" />
+    <ProjectReference Include="..\Galcorp.Auth.Platform.NetStandard\Galcorp.Auth.Platform.NetStandard.csproj" />
   </ItemGroup>
 
 </Project>
