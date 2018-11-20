@@ -5,20 +5,25 @@
     using System.Diagnostics;
     using System.IO;
     using System.Net;
+    using System.Net.Sockets;
     using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
+    using UWP;
 
     public delegate void WaitForResult();
 
     public class GoogleClient
     {
-        public async void PerformAuthViaBrowser(string redirectUri, string authorizationEndpoint, string clientId,
-            string clientSecret, WaitForResult tokenRedirect)
+        const string authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+
+        public async Task<ILoginResult> PerformAuthViaBrowser(string clientId,
+            string clientSecret)
         {
-            
+            var redirectUri = string.Format("http://{0}:{1}/", IPAddress.Loopback, GetRandomUnusedPort());
+
             // Generates state and PKCE values.
             var state = RandomDataBase64Url(32);
             var code_verifier = RandomDataBase64Url(32);
@@ -42,15 +47,17 @@
 
             OpenBrowser(authorizationRequest);
 
-            var context = await WaitForResponse(http);
 
-            var code = ExtractCode(context, http, state);
+            var context = http.GetContext();
+            var code = ExtractCode(context, state);
 
-            if (!string.IsNullOrWhiteSpace(code))
-            {
-                // Starts the code exchange at the Token Endpoint.
-                PerformCodeExchange(code, code_verifier, redirectUri, clientId, clientSecret);
-            }
+            // Sends an HTTP response to the browser.
+            WriteResponse(context, http);
+
+            if (string.IsNullOrWhiteSpace(code))
+                return await PerformCodeExchange(code, code_verifier, redirectUri, clientId, clientSecret);
+
+            return new GoogleLoginResult(false);
         }
 
         public static void OpenBrowser(string url)
@@ -70,15 +77,8 @@
             }
             else
             {
-                // throw 
+                throw new NotSupportedException("Unable to open browser on this platform.");
             }
-        }
-
-        private static async Task<HttpListenerContext> WaitForResponse(HttpListener http)
-        {
-            // Waits for the OAuth authorization response.
-            var context = await http.GetContextAsync();
-            return context;
         }
 
         private HttpListener CreateHttpListner(string redirectUri)
@@ -89,12 +89,10 @@
             http.Start();
             return http;
         }
-        
-        private string ExtractCode(HttpListenerContext context, HttpListener http, string state)
+
+        private string ExtractCode(HttpListenerContext context, string state)
         {
-            string code = "";
-            // Sends an HTTP response to the browser.
-            WriteResponse(context, http);
+            string code = null;
 
             // Checks for errors.
             if (context.Request.QueryString.Get("error") != null)
@@ -123,7 +121,7 @@
             }
 
             Output("Authorization code: " + code);
-            return null;
+            return code;
         }
 
         private static void WriteResponse(HttpListenerContext context, HttpListener http)
@@ -142,7 +140,8 @@
             });
         }
 
-        private async void PerformCodeExchange(string code, string codeVerifier, string redirectUri, string clientId,
+        private async Task<ILoginResult> PerformCodeExchange(string code, string codeVerifier, string redirectUri,
+            string clientId,
             string clientSecret)
         {
             Output("Exchanging code for tokens...");
@@ -183,7 +182,14 @@
                     var tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseText);
 
                     var access_token = tokenEndpointDecoded["access_token"];
+                    var id_token = tokenEndpointDecoded["id_token"];
                     UserinfoCall(access_token);
+
+                    return new GoogleLoginResult(true)
+                    {
+                        AccessToken = access_token,
+                        IdToken = id_token
+                    };
                 }
             }
             catch (WebException ex)
@@ -203,9 +209,11 @@
                     }
                 }
             }
+
+            return new GoogleLoginResult(false);
         }
 
-        private async void UserinfoCall(string access_token)
+        private async void UserinfoCall(string accessToken)
         {
             Output("Making API Call to Userinfo...");
 
@@ -215,7 +223,7 @@
             // sends the request
             var userinfoRequest = (HttpWebRequest) WebRequest.Create(userinfoRequestURI);
             userinfoRequest.Method = "GET";
-            userinfoRequest.Headers.Add(string.Format("Authorization: Bearer {0}", access_token));
+            userinfoRequest.Headers.Add(string.Format("Authorization: Bearer {0}", accessToken));
             userinfoRequest.ContentType = "application/x-www-form-urlencoded";
             userinfoRequest.Accept = "Accept=text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 
@@ -279,6 +287,15 @@
             base64 = base64.Replace("=", "");
 
             return base64;
+        }
+        
+        public static int GetRandomUnusedPort()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            var port = ((IPEndPoint) listener.LocalEndpoint).Port;
+            listener.Stop();
+            return port;
         }
     }
 }
