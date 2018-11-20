@@ -4,3 +4,5 @@
 Repository for Galcorp.Auth.* nuget packages.
 
 Galcorp.Auth is a simple wrapper (in c#, .net) that allows to authenticate (currently to Google using UWP). Authentication code was taken from google auth example. This library works correctly with Xamrin forms on windows.
+
+[Named Link](src/Galcorp.Auth.UWP) 

@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Galcorp.Auth.AzureMobileApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galcorp.Demo.UWP", "..\src\Galcorp.Demo.UWP\Galcorp.Demo.UWP.csproj", "{DFCACB0D-96D1-4B5D-A186-76EB42F69ABA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galcorp.Auth.Google", "..\src\Galcorp.Auth.Google\Galcorp.Auth.Google.csproj", "{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Galcorp.Auth.Google", "..\src\Galcorp.Auth.Google\Galcorp.Auth.Google.csproj", "{CF0B31F2-2D0B-42F8-BA1C-C4F1CD957842}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{353168DC-4245-465D-9FCA-E8346E3AF7AD}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
