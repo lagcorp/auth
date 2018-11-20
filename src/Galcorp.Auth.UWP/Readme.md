@@ -1,4 +1,7 @@
-﻿
+﻿Only works in fall creators update
+
+based on https://github.com/googlesamples/oauth-apps-for-windows
+
 Google Documentation
 --------------------
 
@@ -28,3 +31,10 @@ limitation of Visual Studio it wasn't possible to declare a URI scheme
 containing a period in the UI).
 6. Find the "Protocol" scheme, and replace it with the bundle id you registered
 in step 3. (e.g. "com.example")
+
+
+--------------------------
+protected override void OnActivated(IActivatedEventArgs args)
+{
+    Galcorp.Auth.UWP.AppEventWrapper.OnApplicationActivationEvent(args);
+}

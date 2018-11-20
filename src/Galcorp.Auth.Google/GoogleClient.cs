@@ -15,7 +15,7 @@ namespace Galcorp.Auth.Google
     {
        
 
-        public async void doOAuth(string redirectUri, string authorizationEndpoint, string clientID, string clientSecret)
+        public async void doOAuth(string redirectUri, string authorizationEndpoint, string clientID, string clientSecret, WaitForResult tokenRedirect)
         {
             // Generates state and PKCE values.
             string state = randomDataBase64url(32);
@@ -47,12 +47,24 @@ namespace Galcorp.Auth.Google
             // Waits for the OAuth authorization response.
             var context = await http.GetContextAsync();
 
+            
             // Brings the Console to Focus.
-            BringConsoleToFront();
+            //BringConsoleToFront();
 
+            if (GetValue(context, http, state, out var code)) return;
+
+            // Starts the code exchange at the Token Endpoint.
+            performCodeExchange(code, code_verifier, redirectUri, clientID, clientSecret);
+        }
+
+        private bool GetValue(HttpListenerContext context, HttpListener http, string state, out string code)
+        {
+            code = "";
             // Sends an HTTP response to the browser.
             var response = context.Response;
-            string responseString = string.Format("<html><head><meta http-equiv='refresh' content='10;url=https://google.com'></head><body>Please return to the app.</body></html>");
+            string responseString =
+                string.Format(
+                    "<html><head><meta http-equiv='refresh' content='10;url=https://google.com'></head><body>Please return to the app.</body></html>");
             var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             var responseOutput = response.OutputStream;
@@ -67,17 +79,18 @@ namespace Galcorp.Auth.Google
             if (context.Request.QueryString.Get("error") != null)
             {
                 output(String.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
-                return;
+                return true;
             }
+
             if (context.Request.QueryString.Get("code") == null
                 || context.Request.QueryString.Get("state") == null)
             {
                 output("Malformed authorization response. " + context.Request.QueryString);
-                return;
+                return true;
             }
 
             // extracts the code
-            var code = context.Request.QueryString.Get("code");
+            code = context.Request.QueryString.Get("code");
             var incoming_state = context.Request.QueryString.Get("state");
 
             // Compares the receieved state to the expected value, to ensure that
@@ -85,12 +98,11 @@ namespace Galcorp.Auth.Google
             if (incoming_state != state)
             {
                 output(String.Format("Received request with invalid state ({0})", incoming_state));
-                return;
+                return true;
             }
-            output("Authorization code: " + code);
 
-            // Starts the code exchange at the Token Endpoint.
-            performCodeExchange(code, code_verifier, redirectUri, clientID, clientSecret);
+            output("Authorization code: " + code);
+            return false;
         }
 
         async void performCodeExchange(string code, string code_verifier, string redirectURI, string clientID, string clientSecret)

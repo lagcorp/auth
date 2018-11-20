@@ -96,5 +96,10 @@ namespace Galcorp.Demo.UWP
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            Galcorp.Auth.UWP.AppEventWrapper.OnApplicationActivationEvent(args);
+        }
     }
 }
