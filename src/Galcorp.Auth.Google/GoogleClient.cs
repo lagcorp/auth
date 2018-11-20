@@ -1,92 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-namespace Galcorp.Auth.Google
+﻿namespace Galcorp.Auth.Google
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Net;
+    using System.Runtime.InteropServices;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Newtonsoft.Json;
+
     public delegate void WaitForResult();
 
     public class GoogleClient
     {
-       
-
-        public async void doOAuth(string redirectUri, string authorizationEndpoint, string clientID, string clientSecret, WaitForResult tokenRedirect)
+        public async void PerformAuthViaBrowser(string redirectUri, string authorizationEndpoint, string clientId,
+            string clientSecret, WaitForResult tokenRedirect)
         {
+            
             // Generates state and PKCE values.
-            string state = randomDataBase64url(32);
-            string code_verifier = randomDataBase64url(32);
-            string code_challenge = base64urlencodeNoPadding(sha256(code_verifier));
+            var state = RandomDataBase64Url(32);
+            var code_verifier = RandomDataBase64Url(32);
+            var code_challenge = Base64UrlencodeNoPadding(Sha256(code_verifier));
             const string code_challenge_method = "S256";
 
             // Creates a redirect URI using an available port on the loopback address.
-            output("redirect URI: " + redirectUri);
-
-            // Creates an HttpListener to listen for requests on that redirect URI.
-            var http = new HttpListener();
-            http.Prefixes.Add(redirectUri);
-            output("Listening..");
-            http.Start();
+            Output("redirect URI: " + redirectUri);
 
             // Creates the OAuth 2.0 authorization request.
-            string authorizationRequest = string.Format("{0}?response_type=code&scope=openid%20profile&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
+            var authorizationRequest = string.Format(
+                "{0}?response_type=code&scope=openid%20profile&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
                 authorizationEndpoint,
-                System.Uri.EscapeDataString(redirectUri),
-                clientID,
+                Uri.EscapeDataString(redirectUri),
+                clientId,
                 state,
                 code_challenge,
                 code_challenge_method);
 
-            // Opens request in the browser.
-            System.Diagnostics.Process.Start(authorizationRequest);
+            var http = CreateHttpListner(redirectUri);
 
-            // Waits for the OAuth authorization response.
-            var context = await http.GetContextAsync();
+            OpenBrowser(authorizationRequest);
 
-            
-            // Brings the Console to Focus.
-            //BringConsoleToFront();
+            var context = await WaitForResponse(http);
 
-            if (GetValue(context, http, state, out var code)) return;
+            var code = ExtractCode(context, http, state);
 
-            // Starts the code exchange at the Token Endpoint.
-            performCodeExchange(code, code_verifier, redirectUri, clientID, clientSecret);
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                // Starts the code exchange at the Token Endpoint.
+                PerformCodeExchange(code, code_verifier, redirectUri, clientId, clientSecret);
+            }
         }
 
-        private bool GetValue(HttpListenerContext context, HttpListener http, string state, out string code)
+        public static void OpenBrowser(string url)
         {
-            code = "";
-            // Sends an HTTP response to the browser.
-            var response = context.Response;
-            string responseString =
-                string.Format(
-                    "<html><head><meta http-equiv='refresh' content='10;url=https://google.com'></head><body>Please return to the app.</body></html>");
-            var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            var responseOutput = response.OutputStream;
-            Task responseTask = responseOutput.WriteAsync(buffer, 0, buffer.Length).ContinueWith((task) =>
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                responseOutput.Close();
-                http.Stop();
-                Console.WriteLine("HTTP server stopped.");
-            });
+                url = url.Replace("&", "^&");
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}"));
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+            }
+            else
+            {
+                // throw 
+            }
+        }
+
+        private static async Task<HttpListenerContext> WaitForResponse(HttpListener http)
+        {
+            // Waits for the OAuth authorization response.
+            var context = await http.GetContextAsync();
+            return context;
+        }
+
+        private HttpListener CreateHttpListner(string redirectUri)
+        {
+            var http = new HttpListener();
+            http.Prefixes.Add(redirectUri);
+            Output("Listening..");
+            http.Start();
+            return http;
+        }
+        
+        private string ExtractCode(HttpListenerContext context, HttpListener http, string state)
+        {
+            string code = "";
+            // Sends an HTTP response to the browser.
+            WriteResponse(context, http);
 
             // Checks for errors.
             if (context.Request.QueryString.Get("error") != null)
             {
-                output(String.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
-                return true;
+                Output(string.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
+                return null;
             }
 
             if (context.Request.QueryString.Get("code") == null
                 || context.Request.QueryString.Get("state") == null)
             {
-                output("Malformed authorization response. " + context.Request.QueryString);
-                return true;
+                Output("Malformed authorization response. " + context.Request.QueryString);
+                return null;
             }
 
             // extracts the code
@@ -97,54 +118,72 @@ namespace Galcorp.Auth.Google
             // this app made the request which resulted in authorization.
             if (incoming_state != state)
             {
-                output(String.Format("Received request with invalid state ({0})", incoming_state));
-                return true;
+                Output(string.Format("Received request with invalid state ({0})", incoming_state));
+                return null;
             }
 
-            output("Authorization code: " + code);
-            return false;
+            Output("Authorization code: " + code);
+            return null;
         }
 
-        async void performCodeExchange(string code, string code_verifier, string redirectURI, string clientID, string clientSecret)
+        private static void WriteResponse(HttpListenerContext context, HttpListener http)
         {
-            output("Exchanging code for tokens...");
+            var response = context.Response;
+            var responseString =
+                "<html><head><meta http-equiv=\'refresh\' content=\'10;url=https://google.com\'></head><body>Please return to the app.</body></html>";
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentLength64 = buffer.Length;
+            var responseOutput = response.OutputStream;
+            var responseTask = responseOutput.WriteAsync(buffer, 0, buffer.Length).ContinueWith(task =>
+            {
+                responseOutput.Close();
+                http.Stop();
+                Console.WriteLine("HTTP server stopped.");
+            });
+        }
+
+        private async void PerformCodeExchange(string code, string codeVerifier, string redirectUri, string clientId,
+            string clientSecret)
+        {
+            Output("Exchanging code for tokens...");
 
             // builds the  request
-            string tokenRequestURI = "https://www.googleapis.com/oauth2/v4/token";
-            string tokenRequestBody = string.Format("code={0}&redirect_uri={1}&client_id={2}&code_verifier={3}&client_secret={4}&scope=&grant_type=authorization_code",
+            var tokenRequestURI = "https://www.googleapis.com/oauth2/v4/token";
+            var tokenRequestBody = string.Format(
+                "code={0}&redirect_uri={1}&client_id={2}&code_verifier={3}&client_secret={4}&scope=&grant_type=authorization_code",
                 code,
-                System.Uri.EscapeDataString(redirectURI),
-                clientID,
-                code_verifier,
+                Uri.EscapeDataString(redirectUri),
+                clientId,
+                codeVerifier,
                 clientSecret
-                );
+            );
 
             // sends the request
-            HttpWebRequest tokenRequest = (HttpWebRequest)WebRequest.Create(tokenRequestURI);
+            var tokenRequest = (HttpWebRequest) WebRequest.Create(tokenRequestURI);
             tokenRequest.Method = "POST";
             tokenRequest.ContentType = "application/x-www-form-urlencoded";
             tokenRequest.Accept = "Accept=text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-            byte[] _byteVersion = Encoding.ASCII.GetBytes(tokenRequestBody);
+            var _byteVersion = Encoding.ASCII.GetBytes(tokenRequestBody);
             tokenRequest.ContentLength = _byteVersion.Length;
-            Stream stream = tokenRequest.GetRequestStream();
+            var stream = tokenRequest.GetRequestStream();
             await stream.WriteAsync(_byteVersion, 0, _byteVersion.Length);
             stream.Close();
 
             try
             {
                 // gets the response
-                WebResponse tokenResponse = await tokenRequest.GetResponseAsync();
-                using (StreamReader reader = new StreamReader(tokenResponse.GetResponseStream()))
+                var tokenResponse = await tokenRequest.GetResponseAsync();
+                using (var reader = new StreamReader(tokenResponse.GetResponseStream()))
                 {
                     // reads response body
-                    string responseText = await reader.ReadToEndAsync();
+                    var responseText = await reader.ReadToEndAsync();
                     Console.WriteLine(responseText);
 
                     // converts to dictionary
-                    Dictionary<string, string> tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseText);
+                    var tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseText);
 
-                    string access_token = tokenEndpointDecoded["access_token"];
-                    userinfoCall(access_token);
+                    var access_token = tokenEndpointDecoded["access_token"];
+                    UserinfoCall(access_token);
                 }
             }
             catch (WebException ex)
@@ -154,85 +193,84 @@ namespace Galcorp.Auth.Google
                     var response = ex.Response as HttpWebResponse;
                     if (response != null)
                     {
-                        output("HTTP: " + response.StatusCode);
-                        using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                        Output("HTTP: " + response.StatusCode);
+                        using (var reader = new StreamReader(response.GetResponseStream()))
                         {
                             // reads response body
-                            string responseText = await reader.ReadToEndAsync();
-                            output(responseText);
+                            var responseText = await reader.ReadToEndAsync();
+                            Output(responseText);
                         }
                     }
-
                 }
             }
         }
-        
-        async void userinfoCall(string access_token)
+
+        private async void UserinfoCall(string access_token)
         {
-            output("Making API Call to Userinfo...");
+            Output("Making API Call to Userinfo...");
 
             // builds the  request
-            string userinfoRequestURI = "https://www.googleapis.com/oauth2/v3/userinfo";
+            var userinfoRequestURI = "https://www.googleapis.com/oauth2/v3/userinfo";
 
             // sends the request
-            HttpWebRequest userinfoRequest = (HttpWebRequest)WebRequest.Create(userinfoRequestURI);
+            var userinfoRequest = (HttpWebRequest) WebRequest.Create(userinfoRequestURI);
             userinfoRequest.Method = "GET";
             userinfoRequest.Headers.Add(string.Format("Authorization: Bearer {0}", access_token));
             userinfoRequest.ContentType = "application/x-www-form-urlencoded";
             userinfoRequest.Accept = "Accept=text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 
             // gets the response
-            WebResponse userinfoResponse = await userinfoRequest.GetResponseAsync();
-            using (StreamReader userinfoResponseReader = new StreamReader(userinfoResponse.GetResponseStream()))
+            var userinfoResponse = await userinfoRequest.GetResponseAsync();
+            using (var userinfoResponseReader = new StreamReader(userinfoResponse.GetResponseStream()))
             {
                 // reads response body
-                string userinfoResponseText = await userinfoResponseReader.ReadToEndAsync();
-                output(userinfoResponseText);
+                var userinfoResponseText = await userinfoResponseReader.ReadToEndAsync();
+                Output(userinfoResponseText);
             }
         }
 
         /// <summary>
-        /// Appends the given string to the on-screen log, and the debug console.
+        ///     Appends the given string to the on-screen log, and the debug console.
         /// </summary>
         /// <param name="output">string to be appended</param>
-        public void output(string output)
+        public void Output(string output)
         {
             Console.WriteLine(output);
         }
 
         /// <summary>
-        /// Returns URI-safe data with a given input length.
+        ///     Returns URI-safe data with a given input length.
         /// </summary>
         /// <param name="length">Input length (nb. output will be longer)</param>
         /// <returns></returns>
-        public static string randomDataBase64url(uint length)
+        public static string RandomDataBase64Url(uint length)
         {
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            byte[] bytes = new byte[length];
+            var rng = new RNGCryptoServiceProvider();
+            var bytes = new byte[length];
             rng.GetBytes(bytes);
-            return base64urlencodeNoPadding(bytes);
+            return Base64UrlencodeNoPadding(bytes);
         }
 
         /// <summary>
-        /// Returns the SHA256 hash of the input string.
+        ///     Returns the SHA256 hash of the input string.
         /// </summary>
         /// <param name="inputStirng"></param>
         /// <returns></returns>
-        public static byte[] sha256(string inputStirng)
+        public static byte[] Sha256(string inputStirng)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(inputStirng);
-            SHA256Managed sha256 = new SHA256Managed();
+            var bytes = Encoding.ASCII.GetBytes(inputStirng);
+            var sha256 = new SHA256Managed();
             return sha256.ComputeHash(bytes);
         }
 
         /// <summary>
-        /// Base64url no-padding encodes the given input buffer.
+        ///     Base64url no-padding encodes the given input buffer.
         /// </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public static string base64urlencodeNoPadding(byte[] buffer)
+        public static string Base64UrlencodeNoPadding(byte[] buffer)
         {
-            string base64 = Convert.ToBase64String(buffer);
+            var base64 = Convert.ToBase64String(buffer);
 
             // Converts base64 to base64url.
             base64 = base64.Replace("+", "-");
@@ -242,6 +280,5 @@ namespace Galcorp.Auth.Google
 
             return base64;
         }
-        
     }
 }

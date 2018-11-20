@@ -19,7 +19,7 @@ namespace Galcorp.Demo.Console
         {
             var c = new GoogleClient();
             var redirectUri = string.Format("http://{0}:{1}/", IPAddress.Loopback, GetRandomUnusedPort());
-            c.doOAuth(redirectUri, authorizationEndpoint, clientID, clientSecret, delegate {  });
+            c.PerformAuthViaBrowser(redirectUri, authorizationEndpoint, clientID, clientSecret, delegate {  });
             
         }
 
