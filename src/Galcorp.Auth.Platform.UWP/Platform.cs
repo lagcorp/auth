@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Galcorp.Auth.Platform.UWP
+﻿namespace Galcorp.Auth.Platform.UWP
 {
-    public class Platform:IPlatform
+    public class Platform : IPlatform
     {
+        public string GetCode(string redirectUri, string authorizationRequest, string state)
+        {
+
+        }
+
+        public void Output(string s)
+        {
+        }
     }
 }
