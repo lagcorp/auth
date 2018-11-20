@@ -1,4 +1,4 @@
-﻿namespace Galcorp.Auth.Google
+﻿namespace Galcorp.Auth.Provider.Google
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
-    using UWP;
 
     public delegate void WaitForResult();
 

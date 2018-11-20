@@ -1,4 +1,4 @@
-﻿namespace Galcorp.Auth.UWP
+﻿namespace Galcorp.Auth.Provider.Google
 {
     public class GoogleLoginResult : ILoginResult
     {

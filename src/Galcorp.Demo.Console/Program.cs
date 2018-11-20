@@ -1,7 +1,7 @@
 ﻿namespace Galcorp.Demo.Console
 {
-    using Auth.Google;
     using Auth.Platform.NetStandard;
+    using Auth.Provider.Google;
 
     internal class Program
     {
@@ -11,7 +11,8 @@
 
         private static void Main(string[] args)
         {
-            var a = new Auth.Authenticator(new GoogleClient(new Platform(), ClientId, ClientSecret));
+            var a = new Auth.Authenticator(
+                new GoogleClient(new Platform(), ClientId, ClientSecret));
             
             var token = a.GetToken("google").Result;
         }

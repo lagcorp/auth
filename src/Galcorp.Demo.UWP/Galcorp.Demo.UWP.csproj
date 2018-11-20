@@ -131,10 +131,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Galcorp.Auth.Google\Galcorp.Auth.Google.csproj">
-      <Project>{cf0b31f2-2d0b-42f8-ba1c-c4f1cd957842}</Project>
-      <Name>Galcorp.Auth.Google</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Galcorp.Auth.UWP\Galcorp.Auth.UWP.csproj">
       <Project>{fb95c00f-2c13-4283-957f-bc5334852609}</Project>
       <Name>Galcorp.Auth.UWP</Name>
