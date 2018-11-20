@@ -25,26 +25,26 @@ Add Galcorp.Auth.UWP to your Universal Windows project
 
 Add this line to your App.xaml.cs code
 
-protected override void OnActivated(IActivatedEventArgs args)
+`protected override void OnActivated(IActivatedEventArgs args)
 {
     Galcorp.Auth.UWP.AppEventWrapper.OnApplicationActivationEvent(args);
-}
+}`
 
 To perform login u can use this code (it will give you token)
-new Thread(new ThreadStart(delegate
+`new Thread(new ThreadStart(delegate
 {
     var a = new UWPWrapper(clientID, redirectURI);
     var c = a.Login().Result;
-})).Start();
+})).Start();`
 
 This thread is needed if you will attach this action to the GUI Button. Thread is need to wait asynchorunsly for a browser call back to be handled
 
 You need also to register protocol in your application and in google your protocol name could be somthing like this: 
-	pw.oauth2
+`pw.oauth2`
 
 
-Using your own credentials
---------------------------
+Using your own credentials (docs from google)
+---------------------------------------------
 
 The Sample comes backed with some demo client credentials, which are fine for
 testing, but make sure you use your own credentials before releasing any app,
