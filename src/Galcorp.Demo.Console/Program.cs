@@ -11,8 +11,9 @@
 
         private static void Main(string[] args)
         {
-            var a = new Auth.Authenticator();
-            a.Register(new GoogleClient(new Platform(), ClientId, ClientSecret));
+            var a = new Auth.Authenticator(new GoogleClient(new Platform(), ClientId, ClientSecret));
+            
+            var token = a.GetToken("google").Result;
         }
     }
 }

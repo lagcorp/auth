@@ -9,6 +9,11 @@
     {
         readonly List<IAuthenticationProvider> _providers = new List<IAuthenticationProvider>();
 
+        public Authenticator(params IAuthenticationProvider[] providers)
+        {
+            this._providers.AddRange(providers);
+        }
+
         public Task<ILoginResult> GetToken(string provider)
         {
             return _providers.Single(p => string.Equals(p.Name, provider, StringComparison.InvariantCultureIgnoreCase))

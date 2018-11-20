@@ -27,7 +27,10 @@
             _secret = secret;
         }
 
-        public string Name => "Google";
+        public string Name
+        {
+            get { return "Google"; }
+        }
 
         public Task<ILoginResult> GetToken()
         {
