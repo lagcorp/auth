@@ -27,6 +27,11 @@
             Console.WriteLine(listening);
         }
 
+        public IStore TemporaryStorage
+        {
+            get { return new TemporaryStorage(); }
+        }
+
         private HttpListener CreateHttpListner(string redirectUri)
         {
             var http = new HttpListener();

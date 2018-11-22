@@ -8,11 +8,11 @@ using Newtonsoft.Json;
 
 namespace Galcorp.Auth.UWP
 {
-    public class TokenStore : ITokenStore
+    public class TokenStore : IStore
     {
-        private readonly string fileName = "lopla.cache.json";
+        private readonly string fileName = "galcorp.auth.cache.json";
 
-        public async Task TemporaryStore(string key, object value)
+        public async Task Store(string key, object value)
         {
             var temporaryFolder = ApplicationData.Current.TemporaryFolder;
 

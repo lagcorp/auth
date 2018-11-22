@@ -30,7 +30,7 @@ namespace Galcorp.Demo.UWP
                 var c = a.GetToken().Result;
 
                 TokenStore s = new TokenStore();
-                s.TemporaryStore("googleToken", c).Wait();
+                s.Store("googleToken", c).Wait();
 
             })).Start();
         }
