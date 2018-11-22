@@ -110,6 +110,7 @@
     <None Include="buildnuget.bat" />
     <Compile Include="AppEventWrapper.cs" />
     <Compile Include="GoogleLoginResult.cs" />
+    <Compile Include="TokenStore.cs" />
     <Compile Include="UWPWrapper.cs" />
     <Compile Include="WindowsGoogleClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,6 +120,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

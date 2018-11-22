@@ -28,6 +28,10 @@ namespace Galcorp.Demo.UWP
             {
                 var a = new UWPWrapper(clientID, redirectURI);
                 var c = a.GetToken().Result;
+
+                TokenStore s = new TokenStore();
+                s.TemporaryStore("googleToken", c).Wait();
+
             })).Start();
         }
     }
