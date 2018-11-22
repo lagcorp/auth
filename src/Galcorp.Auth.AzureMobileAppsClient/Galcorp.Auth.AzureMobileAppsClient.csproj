@@ -3,11 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.2-alpha</Version>
+    <Version>0.1.3-alpha</Version>
     <Authors>Paweł Gałęzowski</Authors>
     <Company>Galcorp</Company>
-    <PackageProjectUrl>https://github.com/llaagg/galcorp-auth/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/llaagg/galcorp-auth/</RepositoryUrl>
+    <Product>Galcorp.Auth</Product>
+    <PackageProjectUrl>https://github.com/lagcorp/auth</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lagcorp/auth</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

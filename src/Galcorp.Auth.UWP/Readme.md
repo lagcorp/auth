@@ -1,11 +1,9 @@
-﻿Only works in fall creators update
-Microsoft.NETCore.UniversalWindowsPlatform minmum 6.1.9
-
-based on https://github.com/googlesamples/oauth-apps-for-windows
+﻿Table of Contents
+=================
 
 About the library
 -----------------
-Whole implementation is based on google example. It just wrapps it into simple code.
+Whole implementation is based on [google example](https://github.com/googlesamples/oauth-apps-for-windows). It just wrapps it into simple code. 
 
 Google Documentation
 --------------------
@@ -16,7 +14,7 @@ The protocols referenced in this sample are documented here:
 
 Requirements
 ------------
-This UWP library only works on windows with Microsoft.NETCore.UniversalWindowsPlatform (minimal verio 6.1.9)
+This UWP library only works on windows with Microsoft.NETCore.UniversalWindowsPlatform (minimal ver 6.1.9)
 Your UWP should support Fall Creators Update (to be set in project preferneces)
 
 How to use it
@@ -48,8 +46,8 @@ You need also to register protocol in your application and in google your protoc
 
 Use nuget **Galcorp.Auth** for some interfaces that will allow to move login logic to your net standard libraries.
 
-Using your own credentials (docs from google)
----------------------------------------------
+Setup Google Service
+--------------------
 
 The Sample comes backed with some demo client credentials, which are fine for
 testing, but make sure you use your own credentials before releasing any app,
