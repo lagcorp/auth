@@ -6,7 +6,7 @@
     <title>Galcorp.Auth.UWP</title>
     <authors>Paweł Gałęzowski</authors>
     <owners>Paweł Gałęzowski</owners>
-    <licenseUrl></licenseUrl>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/lagcorp/auth</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Add google authentication to UWP application. Based on google example. OAuth 2.0 for Mobile Desktop Apps</description>
