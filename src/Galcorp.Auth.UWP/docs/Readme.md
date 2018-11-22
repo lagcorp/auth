@@ -1,14 +1,9 @@
-Table of Contents
-=================
-
 About the library
 -----------------
-Whole implementation is based on [google example](https://github.com/googlesamples/oauth-apps-for-windows). It just wrapps it into simple code. 
+Whole implementation is based on google example. It just wrapps it into simpler code. You can find details about this implementation in google samples repository.
 
-Google Documentation
---------------------
 The protocols referenced in this sample are documented here:
-
+- [google example](https://github.com/googlesamples/oauth-apps-for-windows)
 - [OAuth 2.0](https://developers.google.com/identity/protocols/OAuth2)
 - [Using OAuth 2.0 for Mobile and Desktop Applications](https://developers.google.com/identity/protocols/OAuth2InstalledApp)
 
@@ -21,7 +16,7 @@ How to use it
 -------------
 Add Galcorp.Auth.UWP nuget to your Universal Windows project
 
-Add this line to your **App.xaml.cs code
+Add this line to your **App.xaml.cs** code
 
 ```
 protected override void OnActivated(IActivatedEventArgs args)
@@ -32,6 +27,9 @@ protected override void OnActivated(IActivatedEventArgs args)
 
 To perform login u can use this code (it will give you token)
 ```
+string clientID = "some-googleauthverycomplicatedurl.apps.googleusercontent.com";
+string redirectURI = "pw.oauth2:/oauth2redirect";
+
 new Thread(new ThreadStart(delegate
 {
     var a = new UWPWrapper(clientID, redirectURI);
@@ -41,7 +39,7 @@ new Thread(new ThreadStart(delegate
 
 This thread is needed if you will attach this action to the GUI Button. Thread is need to wait asynchorunsly for a browser call back to be handled
 
-You need also to register protocol in your application and in google your protocol name could be somthing like this: 
+You need also to register protocol in your UWP application and in google your protocol name could be somthing like this: 
 `pw.oauth2`
 
 Use nuget **Galcorp.Auth** for some interfaces that will allow to move login logic to your net standard libraries.
