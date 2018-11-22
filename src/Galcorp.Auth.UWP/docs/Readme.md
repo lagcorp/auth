@@ -41,6 +41,7 @@ This thread is needed if you will attach this action to the GUI Button. Thread i
 
 You need also to register protocol in your UWP application and in google your protocol name could be somthing like this: 
 `pw.oauth2`. To access protocol you need to open application manifest setting in project properties page.
+
 ![setting up protocol](setup-protocol.png)
 
 Use nuget **Galcorp.Auth** for some interfaces that will allow to move login logic to your net standard libraries.
