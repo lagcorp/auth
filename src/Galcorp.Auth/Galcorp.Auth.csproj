@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -10,13 +9,15 @@
     <PackageProjectUrl>https://github.com/lagcorp/auth</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lagcorp/auth</RepositoryUrl>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>C:\Work\Repos\galcorp-auth\build\</OutputPath>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="*"/>
+    <PackageReference Include="microsoft.IdentityModel.Protocols.OpenIdConnect" Version="*"/>
+    
+  </ItemGroup>
 </Project>

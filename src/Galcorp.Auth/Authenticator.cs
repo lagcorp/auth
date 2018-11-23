@@ -1,4 +1,9 @@
-﻿namespace Galcorp.Auth
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
+namespace Galcorp.Auth
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +26,7 @@
             ILoginResult token = await p.GetCachedToken();
             if(token!=null)
             {
-                if(!p.Validate(token))
+                if(!Validate(token))
                 {
                     token = p.RefreshToken(token);
                     if(token.Success)
@@ -41,6 +46,11 @@
             }
 
             return token;
+        }
+
+        private bool Validate(ILoginResult token)
+        {
+            return true;
         }
 
         public Task<ILoginResult> GetToken(string provider)

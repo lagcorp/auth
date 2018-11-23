@@ -15,6 +15,8 @@
                 new GoogleClient(new Platform(), ClientId, ClientSecret));
             
             var token = a.Authenticate("google").Result;
+
+
         }
     }
 }
