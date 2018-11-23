@@ -14,7 +14,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>Google UWP OAuth Mobile Desktop</tags>
     <dependencies>
-      <dependency id="Galcorp.Auth" version="0.1.4-alpha" />
+      <dependency id="Galcorp.Auth" version="0.1.5-alpha" />
     </dependencies>
   </metadata>
 </package>
