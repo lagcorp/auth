@@ -216,5 +216,25 @@
             listener.Stop();
             return port;
         }
+
+        public async Task<ILoginResult> GetCachedToken()
+        {
+            return await _platform.TemporaryStorage.Read<GoogleLoginResult>("gooogle_token");
+        }
+
+        public bool Validate(ILoginResult token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ILoginResult RefreshToken(ILoginResult token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task StoreToken(ILoginResult token)
+        {
+            await _platform.TemporaryStorage.Store("gooogle_token", token);
+        }
     }
 }

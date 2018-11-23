@@ -14,10 +14,36 @@
             this._providers.AddRange(providers);
         }
 
+        public async Task<ILoginResult> Authenticate(string provider)
+        {
+            var p = GetProvider(provider);
+
+            ILoginResult token = await p.GetCachedToken();
+            if(token!=null)
+            {
+                if(!p.Validate(token))
+                {
+                    token = p.RefreshToken(token);
+                    if(token.Success)
+                    {
+                        await p.StoreToken(token);
+                    }
+                }
+            }else{
+                token = await p.GetToken();
+            }
+
+            return token;
+        }
+
         public Task<ILoginResult> GetToken(string provider)
         {
-            return _providers.Single(p => string.Equals(p.Name, provider, StringComparison.InvariantCultureIgnoreCase))
-                .GetToken();
+            return GetProvider(provider).GetToken();
+        }
+
+        private IAuthenticationProvider GetProvider(string provider)
+        {
+            return _providers.Single(p => string.Equals(p.Name, provider, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public void Register(IAuthenticationProvider provider)
