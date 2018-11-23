@@ -24,6 +24,11 @@
 
         public string Name => "Google";
 
+        public Task<ILoginResult> GetCachedToken()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<ILoginResult> GetToken()
         {
             _wgc = new WindowsGoogleClient(_clientId, _redirectUri);
@@ -31,6 +36,21 @@
             _waitForBrowserCallbackEvent.WaitOne();
 
             return AsynchorunsuLoginResult;
+        }
+
+        public ILoginResult RefreshToken(ILoginResult token)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task StoreToken(ILoginResult token)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Validate(ILoginResult token)
+        {
+            throw new System.NotImplementedException();
         }
 
         private void AppEventWrapper_ApplicationActivationEvent(IActivatedEventArgs args)

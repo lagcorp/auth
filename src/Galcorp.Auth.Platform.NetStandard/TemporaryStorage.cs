@@ -17,18 +17,19 @@ namespace Galcorp.Auth.Platform.NetStandard
             var name = Path.Combine(temporaryFolder, fileName);
 
             Dictionary<string, object> storage = null;
+            if(File.Exists(name)){
+                using (var content = File.OpenRead(name))
+                using (var sr = new StreamReader(content))
+                using (var jsonTextReader = new JsonTextReader(sr))
+                {
+                    storage = new JsonSerializer().Deserialize<Dictionary<string, object>>(jsonTextReader);
+                }
 
-            using (var content = File.OpenRead(name))
-            using (var sr = new StreamReader(content))
-            using (var jsonTextReader = new JsonTextReader(sr))
-            {
-                storage = new JsonSerializer().Deserialize<Dictionary<string, object>>(jsonTextReader);
+                if(storage.ContainsKey(key))
+                    return Task.FromResult((T)storage[key]);
             }
-
-            if(storage.ContainsKey(key))
-                return Task.FromResult((T)storage[key]);
-            else
-                return Task.FromResult((T)null);
+            
+            return Task.FromResult((T)null);
         }
 
         public Task Store(string key, object value)

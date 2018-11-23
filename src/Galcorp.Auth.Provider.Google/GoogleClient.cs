@@ -111,7 +111,7 @@
 
                     var access_token = tokenEndpointDecoded["access_token"];
                     var id_token = tokenEndpointDecoded["id_token"];
-                    UserinfoCall(access_token);
+                    await UserinfoCall(access_token);
 
                     return new GoogleLoginResult(true)
                     {
@@ -141,7 +141,7 @@
             return new GoogleLoginResult(false);
         }
 
-        private async void UserinfoCall(string accessToken)
+        private async Task UserinfoCall(string accessToken)
         {
             _platform.Output("Making API Call to Userinfo...");
 

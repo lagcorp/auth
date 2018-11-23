@@ -12,6 +12,11 @@ namespace Galcorp.Auth.UWP
     {
         private readonly string fileName = "galcorp.auth.cache.json";
 
+        public Task<T> Read<T>(string key) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task Store(string key, object value)
         {
             var temporaryFolder = ApplicationData.Current.TemporaryFolder;
