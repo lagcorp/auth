@@ -31,6 +31,13 @@
                 }
             }else{
                 token = await p.GetToken();
+                if(token.Success)
+                {
+                    if(token.Success)
+                    {
+                        await p.StoreToken(token);
+                    }
+                }
             }
 
             return token;
