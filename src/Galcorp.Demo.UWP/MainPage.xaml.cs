@@ -24,13 +24,12 @@ namespace Galcorp.Demo.UWP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
             new Thread(new ThreadStart(delegate
             {
-                var a = new UWPWrapper(clientID, redirectURI);
-                var c = a.GetToken().Result;
+                var a = new Galcorp.Auth.Authenticator(new UWPWrapper(clientID, redirectURI));
 
-                TokenStore s = new TokenStore();
-                s.Store("googleToken", c).Wait();
+                var c = a.Authenticate("google").Result;
 
             })).Start();
         }

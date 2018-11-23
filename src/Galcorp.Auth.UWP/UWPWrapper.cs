@@ -11,11 +11,13 @@
         private readonly string _redirectUri;
         private readonly ManualResetEvent _waitForBrowserCallbackEvent = new ManualResetEvent(false);
         private WindowsGoogleClient _wgc;
+        private TokenStore _store;
 
         public UWPWrapper(string clientId, string redirectUri)
         {
             _clientId = clientId;
             _redirectUri = redirectUri;
+            _store = new TokenStore();
 
             AppEventWrapper.ApplicationActivationEvent += AppEventWrapper_ApplicationActivationEvent;
         }
@@ -24,9 +26,9 @@
 
         public string Name => "Google";
 
-        public Task<ILoginResult> GetCachedToken()
+        public async Task<ILoginResult> GetCachedToken()
         {
-            throw new System.NotImplementedException();
+            return await _store.Read<GoogleLoginResult>( typeof(GoogleLoginResult).FullName );
         }
 
         public async Task<ILoginResult> GetToken()
@@ -45,12 +47,12 @@
 
         public Task StoreToken(ILoginResult token)
         {
-            throw new System.NotImplementedException();
+            return _store.Store(typeof(GoogleLoginResult).FullName, token);
         }
 
         public bool Validate(ILoginResult token)
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         private void AppEventWrapper_ApplicationActivationEvent(IActivatedEventArgs args)

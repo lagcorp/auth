@@ -12,31 +12,23 @@ namespace Galcorp.Auth.UWP
     {
         private readonly string fileName = "galcorp.auth.cache.json";
 
-        public Task<T> Read<T>(string key) where T : class
+        public async Task<T> Read<T>(string key) where T : class
         {
-            throw new NotImplementedException();
+            var temporaryFolder = ApplicationData.Current.TemporaryFolder;
+
+            var storage =  await GetStore(temporaryFolder);
+            
+            if (storage != null && storage.ContainsKey(key))
+                return (T)storage[key];
+
+            return null;
         }
 
         public async Task Store(string key, object value)
         {
             var temporaryFolder = ApplicationData.Current.TemporaryFolder;
 
-            Dictionary<string, object> storage = null;
-
-            await temporaryFolder.GetFileAsync(fileName).AsTask().ContinueWith(item =>
-            {
-                if (!item.IsFaulted)
-                {
-                    var file = item.Result;
-                    using (var content = file.OpenStreamForReadAsync())
-                    using (var sr = new StreamReader(content.Result))
-                    using (var jsonTextReader = new JsonTextReader(sr))
-                    {
-                        storage = new JsonSerializer().Deserialize<Dictionary<string, object>>(jsonTextReader);
-                    }
-                }
-            });
-
+            var storage = await GetStore(temporaryFolder);
             
             if (storage == null)
                 storage = new Dictionary<string, object>();
@@ -53,6 +45,30 @@ namespace Galcorp.Auth.UWP
 
             var sampleFile = await temporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(sampleFile, text);
+        }
+
+        private async Task<Dictionary<string, object>> GetStore(StorageFolder temporaryFolder)
+        {
+            Dictionary<string, object> storage = null;
+
+            await temporaryFolder.GetFileAsync(fileName).AsTask().ContinueWith(item =>
+            {
+                if (!item.IsFaulted)
+                {
+                    var file = item.Result;
+                    using (var content = file.OpenStreamForReadAsync())
+                    using (var sr = new StreamReader(content.Result))
+                    using (var jsonTextReader = new JsonTextReader(sr))
+                    {
+                        var d = (Dictionary<string, object>)Newtonsoft.Json.JsonConvert.DeserializeObject(sr.ReadToEnd(), new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All
+                        });
+                        storage = d;
+                    }
+                }
+            });
+            return storage;
         }
     }
 }
