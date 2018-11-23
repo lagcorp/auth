@@ -5,7 +5,7 @@
     <Authors>Paweł Gałęzowski</Authors>
     <Company>Galcorp</Company>
     <Product>Galcorp.Auth</Product>
-    <Version>0.1.4-alpha</Version>
+    <Version>0.1.5-alpha</Version>
     <PackageProjectUrl>https://github.com/lagcorp/auth</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lagcorp/auth</RepositoryUrl>
   </PropertyGroup>
@@ -15,9 +15,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="*"/>
-    <PackageReference Include="microsoft.IdentityModel.Protocols.OpenIdConnect" Version="*"/>
-    
-  </ItemGroup>
 </Project>
