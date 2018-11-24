@@ -9,6 +9,12 @@ namespace Galcorp.Auth.Platform.NetStandard
     public class TemporaryStorage : IStore
     {
         private readonly string fileName = "galcorp.auth.cache.json";
+        private string _appNamePrefix;
+
+        public TemporaryStorage(string appNamePrefix)
+        {
+            _appNamePrefix = appNamePrefix;
+        }
 
         public Dictionary<string, object> GetCache(string name)
         {
@@ -33,7 +39,7 @@ namespace Galcorp.Auth.Platform.NetStandard
             where T: class
         {
             var temporaryFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var name = Path.Combine(temporaryFolder, fileName);
+            var name = Path.Combine(temporaryFolder, _appNamePrefix?? "",fileName);
 
             var storage = GetCache(name);
             if(storage !=null && storage.ContainsKey(key))
@@ -49,7 +55,7 @@ namespace Galcorp.Auth.Platform.NetStandard
         public Task Store(string key, object value)
         {
             var temporaryFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var name = Path.Combine(temporaryFolder, fileName);
+            var name = Path.Combine(temporaryFolder, _appNamePrefix?? "",fileName);
 
             var storage = GetCache(name);
 
@@ -65,7 +71,10 @@ namespace Galcorp.Auth.Platform.NetStandard
             {
                 TypeNameHandling = TypeNameHandling.All
             });
-
+            if (!Directory.Exists(Path.Combine(temporaryFolder, _appNamePrefix ?? "")))
+            {
+                Directory.CreateDirectory(Path.Combine(temporaryFolder, _appNamePrefix ?? ""));
+            }
             File.WriteAllText(name, text);
 
             return Task.CompletedTask;

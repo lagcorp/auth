@@ -8,6 +8,13 @@
 
     public class Platform : IPlatform
     {
+        private string _appNamePrefix;
+
+        public Platform(string appNamePrefix)
+        {
+            _appNamePrefix = appNamePrefix;
+        }
+
         public string GetCode(string redirectUri, string authorizationRequest, string state)
         {
             var http = CreateHttpListner(redirectUri);
@@ -29,7 +36,7 @@
 
         public IStore TemporaryStorage
         {
-            get { return new TemporaryStorage(); }
+            get { return new TemporaryStorage(_appNamePrefix); }
         }
 
         private HttpListener CreateHttpListner(string redirectUri)

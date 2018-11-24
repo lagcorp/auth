@@ -12,7 +12,7 @@
         private static void Main(string[] args)
         {
             var a = new Auth.Authenticator(
-                new GoogleClient(new Platform(), ClientId, ClientSecret));
+                new GoogleClient(new Platform("demo_console"), ClientId, ClientSecret));
             
             var token = a.Authenticate("google").Result;
 
