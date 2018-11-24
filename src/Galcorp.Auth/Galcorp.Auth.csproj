@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Paweł Gałęzowski</Authors>
     <Company>Galcorp</Company>
     <Product>Galcorp.Auth</Product>
-    <Version>0.1.5-alpha</Version>
+    <Version>0.1.6-alpha</Version>
     <PackageProjectUrl>https://github.com/lagcorp/auth</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lagcorp/auth</RepositoryUrl>
   </PropertyGroup>
