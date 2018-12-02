@@ -37,7 +37,7 @@ new Thread(new ThreadStart(delegate
 })).Start();
 ```
 
-This thread is needed if you will attach this action to the GUI Button. Thread is need to wait asynchorunsly for a browser call back to be handled
+We create new thread to wait for auth result. It is needed if you will attach this action to the GUI Button. It is need to wait asynchorunsly for a browser call back to be handled. When user will confirm this action in browser then this thread will end.
 
 You need also to register protocol in your UWP application and in google your protocol name could be somthing like this: 
 `pw.oauth2`. To access protocol you need to open application manifest setting in project properties page.
