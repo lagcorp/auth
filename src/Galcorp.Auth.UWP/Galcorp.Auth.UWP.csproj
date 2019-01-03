@@ -111,6 +111,7 @@
     <Compile Include="AppEventWrapper.cs" />
     <Compile Include="GoogleLoginResult.cs" />
     <Compile Include="TokenStore.cs" />
+    <Compile Include="UWPPlatform.cs" />
     <Compile Include="UWPWrapper.cs" />
     <Compile Include="WindowsGoogleClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,10 +11,10 @@
         private readonly WindowsGoogleClient _wgc;
         private readonly TokenStore _store;
 
-        public UWPWrapper(string clientId, string redirectUri)
+        public UWPWrapper(string clientId, string redirectUri, IPlatform platform)
         {
             _store = new TokenStore();
-            _wgc = new WindowsGoogleClient(clientId, redirectUri, new UWPPlatform());
+            _wgc = new WindowsGoogleClient(clientId, redirectUri, platform);
 
             AppEventWrapper.ApplicationActivationEvent += AppEventWrapper_ApplicationActivationEvent;
         }
@@ -41,11 +41,6 @@
             return AsynchorunsuLoginResult;
         }
 
-        public ILoginResult RefreshToken(ILoginResult token)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task StoreToken(ILoginResult token)
         {
             return _store.Store(typeof(GoogleLoginResult).FullName, token);
@@ -68,20 +63,5 @@
                 });
             }
         }
-    }
-
-    public class UWPPlatform : IPlatform
-    {
-        public string GetCode(string redirectUri, string authorizationRequest, string state)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Output(string s)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IStore TemporaryStorage { get; }
     }
 }

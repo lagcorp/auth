@@ -4,6 +4,7 @@
 
 namespace Galcorp.Demo.UWP
 {
+    using System;
     using System.Threading;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -28,10 +29,15 @@ namespace Galcorp.Demo.UWP
             {
 
                 var a = new Galcorp.Auth.Authenticator(
-                    new UWPWrapper(clientID, redirectURI));
+                    new UWPWrapper(clientID, redirectURI, new UWPPlatform(Handler)));
 
                 var c = a.Authenticate("google").Result;
             })).Start();
+        }
+
+        private void Handler(object sender, string text)
+        {
+            
         }
     }
 }
