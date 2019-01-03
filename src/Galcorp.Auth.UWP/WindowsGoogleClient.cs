@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Text;
@@ -27,7 +28,6 @@
             _clientId = clientId;
             _redirectUri = redirectUri;
         }
-
 
         public async Task LoginOpenBrowser()
         {
@@ -194,17 +194,30 @@
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             // Makes a call to the Userinfo endpoint, and prints the results.
-            Output("Making API Call to Userinfo...");
-            var userinfoResponse = client.GetAsync(UserInfoEndpoint).Result;
-            var userinfoResponseContent = await userinfoResponse.Content.ReadAsStringAsync();
-
-            Output(userinfoResponseContent);
+            await LoginTest(accessToken);
 
             return new GoogleLoginResult(true)
             {
                 IdToken = idToken,
                 AccessToken = accessToken
             };
+        }
+
+        public async Task<bool> LoginTest(string accessToken)
+        {
+            var handler = new HttpClientHandler();
+            handler.AllowAutoRedirect = true;
+            var client = new HttpClient(handler);
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            Output("Making API Call to Userinfo...");
+            var userinfoResponse = client.GetAsync(UserInfoEndpoint).Result;
+            var userinfoResponseContent = await userinfoResponse.Content.ReadAsStringAsync();
+
+            Output(userinfoResponseContent);
+            bool r = userinfoResponse.StatusCode == HttpStatusCode.OK;
+            return await Task.FromResult(r);
         }
     }
 }

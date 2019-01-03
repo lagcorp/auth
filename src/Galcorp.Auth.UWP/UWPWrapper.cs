@@ -11,13 +11,14 @@
         private readonly string _redirectUri;
         private readonly ManualResetEvent _waitForBrowserCallbackEvent = new ManualResetEvent(false);
         private WindowsGoogleClient _wgc;
-        private TokenStore _store;
+        private readonly TokenStore _store;
 
         public UWPWrapper(string clientId, string redirectUri)
         {
             _clientId = clientId;
             _redirectUri = redirectUri;
             _store = new TokenStore();
+            _wgc = new WindowsGoogleClient(_clientId, _redirectUri);
 
             AppEventWrapper.ApplicationActivationEvent += AppEventWrapper_ApplicationActivationEvent;
         }
@@ -31,9 +32,13 @@
             return await _store.Read<GoogleLoginResult>( typeof(GoogleLoginResult).FullName );
         }
 
+        public Task<bool> Validate(ILoginResult token)
+        {
+            return _wgc.LoginTest(token.AccessToken);
+        }
+
         public async Task<ILoginResult> GetToken()
         {
-            _wgc = new WindowsGoogleClient(_clientId, _redirectUri);
             await _wgc.LoginOpenBrowser();
             _waitForBrowserCallbackEvent.WaitOne();
 
@@ -49,12 +54,7 @@
         {
             return _store.Store(typeof(GoogleLoginResult).FullName, token);
         }
-
-        public bool Validate(ILoginResult token)
-        {
-            return true;
-        }
-
+        
         private void AppEventWrapper_ApplicationActivationEvent(IActivatedEventArgs args)
         {
             if (args is ProtocolActivatedEventArgs activation)

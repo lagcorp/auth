@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
-
-namespace Galcorp.Auth
+﻿namespace Galcorp.Auth
 {
     using System;
     using System.Collections.Generic;
@@ -10,45 +7,46 @@ namespace Galcorp.Auth
 
     public class Authenticator
     {
-        readonly List<IAuthenticationProvider> _providers = new List<IAuthenticationProvider>();
+        private readonly List<IAuthenticationProvider> _providers = new List<IAuthenticationProvider>();
 
+        /// <summary>
+        /// Authenticator wrapper to allow many auth providers
+        /// </summary>
+        /// <param name="providers"></param>
         public Authenticator(params IAuthenticationProvider[] providers)
         {
-            this._providers.AddRange(providers);
+            _providers.AddRange(providers);
         }
 
         public async Task<ILoginResult> Authenticate(string provider)
         {
             var p = GetProvider(provider);
 
-            ILoginResult token = await p.GetCachedToken();
-            if(token!=null)
+            var token = await p.GetCachedToken();
+            if (token != null)
             {
-                if(!Validate(token))
+                if (!await Validate(provider, token))
                 {
-                    token = p.RefreshToken(token);
-                    if(token.Success)
-                    {
-                        await p.StoreToken(token);
-                    }
+                    token = await p.GetToken();
+                    if (token.Success) await p.StoreToken(token);
                 }
-            }else{
+            }
+            else
+            {
                 token = await p.GetToken();
-                if(token.Success)
-                {
-                    if(token.Success)
-                    {
+                if (token.Success)
+                    if (token.Success)
                         await p.StoreToken(token);
-                    }
-                }
             }
 
             return token;
         }
 
-        private bool Validate(ILoginResult token)
+        private Task<bool> Validate(string provider, ILoginResult token)
         {
-            return true;
+            var p = GetProvider(provider);
+
+            return p.Validate(token);
         }
 
         public Task<ILoginResult> GetToken(string provider)
@@ -63,7 +61,7 @@ namespace Galcorp.Auth
 
         public void Register(IAuthenticationProvider provider)
         {
-            this._providers.Add(provider);
+            _providers.Add(provider);
         }
     }
 }
