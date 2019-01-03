@@ -5,9 +5,10 @@
     <Authors>Paweł Gałęzowski</Authors>
     <Company>Galcorp</Company>
     <Product>Galcorp.Auth</Product>
-    <Version>0.1.7-alpha</Version>
+    <Version>0.1.8-alpha</Version>
     <PackageProjectUrl>https://github.com/lagcorp/auth</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lagcorp/auth</RepositoryUrl>
+    <FileVersion>0.1.8.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>C:\Work\Repos\galcorp-auth\build\</OutputPath>
