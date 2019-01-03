@@ -26,11 +26,11 @@ namespace Galcorp.Demo.UWP
         {
             new Thread(new ThreadStart(delegate
             {
+
                 var a = new Galcorp.Auth.Authenticator(
                     new UWPWrapper(clientID, redirectURI));
 
                 var c = a.Authenticate("google").Result;
-
             })).Start();
         }
     }

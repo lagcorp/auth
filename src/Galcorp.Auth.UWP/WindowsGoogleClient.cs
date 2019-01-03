@@ -1,7 +1,6 @@
 ﻿namespace Galcorp.Auth.UWP
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -21,12 +20,14 @@
         private const string TokenEndpoint = "https://www.googleapis.com/oauth2/v4/token";
         private const string UserInfoEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
         private readonly string _clientId;
+        private readonly IPlatform _platform;
         private readonly string _redirectUri;
 
-        public WindowsGoogleClient(string clientId, string redirectUri)
+        public WindowsGoogleClient(string clientId, string redirectUri, IPlatform platform)
         {
             _clientId = clientId;
             _redirectUri = redirectUri;
+            _platform = platform;
         }
 
         public async Task LoginOpenBrowser()
@@ -65,7 +66,7 @@
         /// <param name="output">string to be appended</param>
         private void Output(string output)
         {
-            Debug.WriteLine(output);
+            _platform.Output(output);
         }
 
         /// <summary>
@@ -216,7 +217,7 @@
             var userinfoResponseContent = await userinfoResponse.Content.ReadAsStringAsync();
 
             Output(userinfoResponseContent);
-            bool r = userinfoResponse.StatusCode == HttpStatusCode.OK;
+            var r = userinfoResponse.StatusCode == HttpStatusCode.OK;
             return await Task.FromResult(r);
         }
     }

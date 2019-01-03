@@ -38,19 +38,14 @@
             return await _platform.TemporaryStorage.Read<GoogleLoginResult>("gooogle_token");
         }
 
-        public ILoginResult RefreshToken(ILoginResult token)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task StoreToken(ILoginResult token)
         {
             await _platform.TemporaryStorage.Store("gooogle_token", token);
         }
 
-        public Task Logout()
+        public async Task Logout()
         {
-            throw new NotImplementedException();
+            await _platform.TemporaryStorage.Store("gooogle_token", null);
         }
 
         public async Task<bool> Validate(ILoginResult token)

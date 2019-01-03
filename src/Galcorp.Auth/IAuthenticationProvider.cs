@@ -8,7 +8,6 @@
         Task<ILoginResult> GetToken();
         Task<ILoginResult> GetCachedToken();
         Task<bool> Validate(ILoginResult token);
-        ILoginResult RefreshToken(ILoginResult token);
         Task StoreToken(ILoginResult token);
         Task Logout();
     }

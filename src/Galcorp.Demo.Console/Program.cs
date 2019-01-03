@@ -13,9 +13,8 @@
         {
             var a = new Auth.Authenticator(
                 new GoogleClient(new Platform("demo_console"), ClientId, ClientSecret));
-            
-            var token = a.Authenticate("google").Result;
 
+            var token = a.Authenticate("google").Result;
 
         }
     }

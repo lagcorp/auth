@@ -7,18 +7,14 @@
     // ReSharper disable once InconsistentNaming
     public class UWPWrapper : IAuthenticationProvider
     {
-        private readonly string _clientId;
-        private readonly string _redirectUri;
         private readonly ManualResetEvent _waitForBrowserCallbackEvent = new ManualResetEvent(false);
-        private WindowsGoogleClient _wgc;
+        private readonly WindowsGoogleClient _wgc;
         private readonly TokenStore _store;
 
         public UWPWrapper(string clientId, string redirectUri)
         {
-            _clientId = clientId;
-            _redirectUri = redirectUri;
             _store = new TokenStore();
-            _wgc = new WindowsGoogleClient(_clientId, _redirectUri);
+            _wgc = new WindowsGoogleClient(clientId, redirectUri, new UWPPlatform());
 
             AppEventWrapper.ApplicationActivationEvent += AppEventWrapper_ApplicationActivationEvent;
         }
@@ -57,7 +53,7 @@
 
         public Task Logout()
         {
-            throw new System.NotImplementedException();
+            return _store.Store(typeof(GoogleLoginResult).FullName, null);
         }
 
         private void AppEventWrapper_ApplicationActivationEvent(IActivatedEventArgs args)
@@ -72,5 +68,20 @@
                 });
             }
         }
+    }
+
+    public class UWPPlatform : IPlatform
+    {
+        public string GetCode(string redirectUri, string authorizationRequest, string state)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Output(string s)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IStore TemporaryStorage { get; }
     }
 }
