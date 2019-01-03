@@ -55,7 +55,7 @@
 
         public async Task<bool> Validate(ILoginResult token)
         {
-            var uinfo = await UserinfoCall(token.AccessToken);
+            return await UserinfoCall(token.AccessToken);
         }
 
         private async Task<ILoginResult> PerformAuthViaBrowser(string clientId,
