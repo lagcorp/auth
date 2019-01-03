@@ -24,7 +24,6 @@ namespace Galcorp.Demo.UWP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             new Thread(new ThreadStart(delegate
             {
                 var a = new Galcorp.Auth.Authenticator(

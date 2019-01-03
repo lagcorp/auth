@@ -54,7 +54,12 @@
         {
             return _store.Store(typeof(GoogleLoginResult).FullName, token);
         }
-        
+
+        public Task Logout()
+        {
+            throw new System.NotImplementedException();
+        }
+
         private void AppEventWrapper_ApplicationActivationEvent(IActivatedEventArgs args)
         {
             if (args is ProtocolActivatedEventArgs activation)

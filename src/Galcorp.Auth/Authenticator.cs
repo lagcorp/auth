@@ -63,5 +63,19 @@
         {
             _providers.Add(provider);
         }
+
+        public async Task Logout(string provider)
+        {
+            var p = GetProvider(provider);
+
+            var token = await p.GetCachedToken();
+            if (token != null)
+            {
+                if (await Validate(provider, token))
+                {
+                    p.Logout();
+                }
+            }
+        }
     }
 }

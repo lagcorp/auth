@@ -26,14 +26,36 @@
             _secret = secret;
         }
 
-        public string Name
-        {
-            get { return "Google"; }
-        }
+        public string Name => "Google";
 
         public Task<ILoginResult> GetToken()
         {
             return PerformAuthViaBrowser(_clientId, _secret);
+        }
+
+        public async Task<ILoginResult> GetCachedToken()
+        {
+            return await _platform.TemporaryStorage.Read<GoogleLoginResult>("gooogle_token");
+        }
+
+        public ILoginResult RefreshToken(ILoginResult token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task StoreToken(ILoginResult token)
+        {
+            await _platform.TemporaryStorage.Store("gooogle_token", token);
+        }
+
+        public Task Logout()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> Validate(ILoginResult token)
+        {
+            var uinfo = await UserinfoCall(token.AccessToken);
         }
 
         private async Task<ILoginResult> PerformAuthViaBrowser(string clientId,
@@ -141,7 +163,7 @@
             return new GoogleLoginResult(false);
         }
 
-        private async Task UserinfoCall(string accessToken)
+        private async Task<bool> UserinfoCall(string accessToken)
         {
             _platform.Output("Making API Call to Userinfo...");
 
@@ -155,14 +177,25 @@
             userinfoRequest.ContentType = "application/x-www-form-urlencoded";
             userinfoRequest.Accept = "Accept=text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 
-            // gets the response
-            var userinfoResponse = await userinfoRequest.GetResponseAsync();
-            using (var userinfoResponseReader = new StreamReader(userinfoResponse.GetResponseStream()))
+            var result = false;
+
+            try
             {
-                // reads response body
-                var userinfoResponseText = await userinfoResponseReader.ReadToEndAsync();
-                _platform.Output(userinfoResponseText);
+                var userinfoResponse = await userinfoRequest.GetResponseAsync();
+                using (var userinfoResponseReader = new StreamReader(userinfoResponse.GetResponseStream()))
+                {
+                    // reads response body
+                    var userinfoResponseText = await userinfoResponseReader.ReadToEndAsync();
+                    _platform.Output(userinfoResponseText);
+                    result = true;
+                }
             }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -215,28 +248,6 @@
             var port = ((IPEndPoint) listener.LocalEndpoint).Port;
             listener.Stop();
             return port;
-        }
-
-        public async Task<ILoginResult> GetCachedToken()
-        {
-            return await _platform.TemporaryStorage.Read<GoogleLoginResult>("gooogle_token");
-        }
-
-        public ILoginResult RefreshToken(ILoginResult token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task StoreToken(ILoginResult token)
-        {
-            await _platform.TemporaryStorage.Store("gooogle_token", token);
-        }
-
-        public async Task<bool> Validate(ILoginResult token)
-        {
-            var uinfo = await this.UserinfoCall(token.AccessToken);
-
-            
         }
     }
 }
