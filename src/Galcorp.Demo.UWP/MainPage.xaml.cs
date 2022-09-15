@@ -13,9 +13,6 @@ namespace Galcorp.Demo.UWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private const string ClientId = "aaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbb.apps.googleusercontent.com";
-        private const string ClientSecret = "cccccccccccccccccccccc";
-
         public MainPage()
         {
             InitializeComponent();
@@ -25,8 +22,9 @@ namespace Galcorp.Demo.UWP
         {
             new Thread(() =>
             {
+                
                 var a = new Authenticator(
-                    new UWPWrapper(ClientId, ClientSecret, new UWPPlatform(Handler)));
+                    new UWPWrapper(Credentials.ClientId, Credentials.ClientSecret, new UWPPlatform(Handler)));
 
                 var c = a.Authenticate("google").Result;
             }).Start();

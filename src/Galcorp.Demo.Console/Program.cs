@@ -3,12 +3,8 @@
     using Auth.Platform.NetStandard;
     using Auth.Provider.Google;
 
-    internal class Program
+    public partial class Program
     {
-        // client configuration
-        private const string ClientId = "aaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbb.apps.googleusercontent.com";
-        private const string ClientSecret = "cccccccccccccccccccccc";
-
         private static void Main(string[] args)
         {
             var a = new Auth.Authenticator(
