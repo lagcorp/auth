@@ -1,43 +1,39 @@
-﻿
+﻿// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+using System.Threading;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Galcorp.Auth;
+using Galcorp.Auth.UWP;
 
 namespace Galcorp.Demo.UWP
 {
-    using System;
-    using System.Threading;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Auth.UWP;
-
     /// <summary>
     ///     An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private const string clientID = "581786658708-r4jimt0msgjtp77b15lonfom92ko6aeg.apps.googleusercontent.com";
-        private const string redirectURI = "pw.oauth2:/oauth2redirect";
+        private const string ClientId = "aaaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbbbbbb.apps.googleusercontent.com";
+        private const string ClientSecret = "cccccccccccccccccccccc";
 
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(new ThreadStart(delegate
+            new Thread(() =>
             {
-
-                var a = new Galcorp.Auth.Authenticator(
-                    new UWPWrapper(clientID, redirectURI, new UWPPlatform(Handler)));
+                var a = new Authenticator(
+                    new UWPWrapper(ClientId, ClientSecret, new UWPPlatform(Handler)));
 
                 var c = a.Authenticate("google").Result;
-            })).Start();
+            }).Start();
         }
 
         private void Handler(object sender, string text)
         {
-            
         }
     }
 }

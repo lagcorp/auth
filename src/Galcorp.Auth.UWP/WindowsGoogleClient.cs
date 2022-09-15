@@ -56,6 +56,11 @@
 
             Output("Opening authorization request URI: " + authorizationRequest);
 
+            await this.RedirectUser(authorizationRequest);
+        }
+
+        private async Task RedirectUser(string authorizationRequest)
+        {
             // Opens the Authorization URI in the browser.
             var success = await Launcher.LaunchUriAsync(new Uri(authorizationRequest));
         }

@@ -6,11 +6,11 @@
     using System.Runtime.InteropServices;
     using System.Text;
 
-    public class Platform : IPlatform
+    public class ConsoleApplication : IPlatform
     {
         private string _appNamePrefix;
 
-        public Platform(string appNamePrefix)
+        public ConsoleApplication(string appNamePrefix)
         {
             _appNamePrefix = appNamePrefix;
         }
